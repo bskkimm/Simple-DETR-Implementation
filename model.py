@@ -4,20 +4,26 @@ import torchvision.models as models
 import torch.nn as nn
 from config import dataset_config
 from config import model_config
-from config import train_config
+
 
 
 class Backbone(nn.Module):
     def __init__(self,
                  backbone_dim=model_config['backbone_dim'],
+                 backbone_model=model_config['backbone_model'],
                  model_dim=model_config['model_dim']):
         super().__init__()
         # Load the pre-trained resnet50 model without final FC layer and tracking gradients
-        resnet50 = models.resnet50(weights=models.ResNet50_Weights.DEFAULT, norm_layer=torchvision.ops.FrozenBatchNorm2d)
-        # Remove the final fully connected layer
-        self.resnet50 = nn.Sequential(*list(resnet50.children())[:-2])
+        if backbone_model == 50:
+            resnet = models.resnet50(weights=models.ResNet50_Weights.DEFAULT, norm_layer=torchvision.ops.FrozenBatchNorm2d)
+            # Remove the final fully connected layer
+        elif backbone_model == 101:
+            resnet = models.resnet101(weights=models.ResNet101_Weights.DEFAULT, norm_layer=torchvision.ops.FrozenBatchNorm2d)
+            # Remove the final fully connected layer
+
+        self.resnet = nn.Sequential(*list(resnet.children())[:-2])
         if model_config['freeze_backbone']:
-            for param in self.resnet50.parameters():
+            for param in self.resnet.parameters():
                 param.requires_grad = False
 
 
@@ -28,7 +34,7 @@ class Backbone(nn.Module):
 
     def forward(self, x): 
         # x is the initial batch input (B, 3, H ,W)
-        x = self.resnet50(x) # (B, 2048, H', W')
+        x = self.resnet(x) # (B, 2048, H', W')
         x = self.embed_proj(x) # (B, embed_dim, H', W')
         x = x.permute(0, 2, 3, 1) # (B, H', W', embed_dim)
         x = x.flatten(1, 2)  # (B, H'*W', embed_dim)
@@ -164,6 +170,7 @@ class DETR(nn.Module):
                  model_dim=model_config['model_dim'],
                  num_queries=model_config['num_queries'],
                  num_classes=dataset_config['num_classes'],
+                # bakbone_model=model_config['backbone_model'],
                  max_len=5000):
         super().__init__()
 
@@ -192,7 +199,7 @@ class DETR(nn.Module):
         # Backbone
         features = self.backbone(x)                 # (B, N, D)
 
-        pos_enc = self.pos_enc(features)            # (B, N, D) ← now learnable
+        pos_enc = self.pos_enc(features)            # (B, N, D) 
 
         # Encoder
         memory = self.encoder(features, pos_enc)    # (B, N, D)
