@@ -17,8 +17,10 @@ Then, implement ViT step by step using `tutorial.ipynb`
 ## Result
 
 ### Predicted Bounding boxes
-<img width="389" alt="image" src="https://github.com/user-attachments/assets/509c8660-3ea7-411f-8898-784f8cc99b65" />
+<img width="594" alt="image" src="https://github.com/user-attachments/assets/92d6fc46-4ab4-448b-ae53-c9087c4fd325" />
+
 
 ### Bounding boxs and correponding object queries
 
-<img width="426" alt="image" src="https://github.com/user-attachments/assets/f7716690-1cba-48aa-98c6-622d962cc9d6" />
+<img width="710" alt="image" src="https://github.com/user-attachments/assets/fc1eb0d9-b0e5-4c26-8b78-34ab3c8eb0c7" />
+
