@@ -12,7 +12,7 @@ conda create -n DETR python=3.10 -y
 conda activate DETR
 pip install -r requirements.txt
 ```
-Then, implement ViT step by step using `tutorial.ipynb`
+Then, implement DETR step by step using `tutorial.ipynb`
 
 ## Result
 
