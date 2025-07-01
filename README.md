@@ -1,5 +1,6 @@
 # Simple-DETR-Implementation
 This repo offers simple implementation of DETR (DEtection TRansformer) from scratch using PyTorch.
+Please refer to the implmentation details here.
 
 
 ## Guidance
